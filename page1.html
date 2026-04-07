@@ -200,7 +200,7 @@
     <h1 class="lock-title">something is waiting for you.</h1>
     <p class="lock-sub">
       open it when the clock hits<br>
-      <span style="color:#810000; font-size:16px; font-weight:500;">3:10 PM</span>
+      <span style="color:#810000; font-size:16px; font-weight:500;">8:37 PM</span>
     </p>
 
     <button class="open-btn" id="open-btn" onclick="tryOpen()">open ♡</button>
@@ -211,10 +211,10 @@
   <!-- MODAL -->
   <div class="modal-overlay" id="modal">
     <div class="modal-box">
-      <div class="modal-title" id="modal-title">not now bitchhhhh 🔒</div>
+      <div class="modal-title" id="modal-title">not now cutieee 🔒</div>
       <p class="modal-body" id="modal-body">the clock hasn't hit 8:37 yet.<br>be patient, guava.</p>
       <p class="modal-time">
-        unlocks at <span style="color:#810000;">3:10 PM</span><br>
+        unlocks at <span style="color:#810000;">8:37 PM</span><br>
         <span id="modal-cd" style="color:#5a2020;">—</span> to go
       </p>
       <button class="modal-close" onclick="closeModal()">okay fine 🙄</button>
@@ -228,12 +228,12 @@
 
   function isUnlocked() {
     const n = new Date();
-    return n.getHours() > 15 || (n.getHours() === 15 && n.getMinutes() >= 10);
+    return n.getHours() > 20 || (n.getHours() === 15 && n.getMinutes() >= 41);
   }
 
   function getTimeLeft() {
     const now = new Date();
-    const unlock = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 15, 10, 0);
+    const unlock = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 15, 41, 0);
     return Math.max(0, unlock - now);
   }
 
@@ -255,16 +255,11 @@
     const openBtn = document.getElementById('open-btn');
     const countdownHint = document.getElementById('countdown-hint');
     
-    // Auto-redirect to page2 when time hits 8:37 PM
     if (left === 0) {
-      cd.textContent = 'redirecting...';
+      cd.textContent = 'open it now!';
       cd.style.color = '#810000';
       openBtn.textContent = 'open now ♡';
       countdownHint.style.opacity = '0.5';
-      // Auto-redirect after a short delay
-      setTimeout(() => {
-        window.location.href = 'page2.html';
-      }, 500);
     } else {
       cd.textContent = fmtMs(left);
       openBtn.textContent = 'open ♡';
@@ -283,7 +278,7 @@
     }
     modalCount++;
     document.getElementById('modal-title').textContent =
-      modalCount === 1 ? 'not now bitchhhhh 🔒' : 'I saiddd not nowww 😭';
+      modalCount === 1 ? 'not now cutieee 🔒' : 'I saiddd not nowww 😭';
     document.getElementById('modal-body').innerHTML =
       modalCount === 1
         ? "the clock hasn't hit 8:37 yet.<br>be patient, guava."
@@ -293,11 +288,6 @@
 
   function closeModal() {
     document.getElementById('modal').classList.remove('show');
-  }
-
-  // Check if already unlocked on page load and redirect immediately
-  if (isUnlocked()) {
-    window.location.href = 'page2.html';
   }
 
   setInterval(tickClock, 1000);
