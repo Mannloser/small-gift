@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>for guava.</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    background: #0a0000;
+    font-family: 'Inter', sans-serif;
+    color: #f0dede;
+    overflow: hidden;
+  }
+
+  .lav-dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #c4a8d4;
+    margin: 0 4px;
+    vertical-align: middle;
+    opacity: 0.6;
+  }
+
+  /* ── PAGE 2: CHAT ── */
+  #chat-page {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset: 0;
+    background: #0a0000;
+  }
+
+  #chat-page.hidden { display: none; }
+
+  .chat-header {
+    flex-shrink: 0;
+    width: 100%;
+    text-align: center;
+    padding: 1.5rem 1.5rem 1rem;
+    border-bottom: 1px solid #1f0000;
+  }
+
+  .chat-header-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1rem, 4vw, 1.2rem);
+    font-weight: 500;
+    font-style: italic;
+    color: #e8c0c0;
+  }
+
+  .chat-header-sub {
+    font-size: 11px;
+    color: #4a2020;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .intro-section {
+    flex-shrink: 0;
+    padding: 1.5rem 1rem;
+    border-bottom: 1px solid #1f0000;
+  }
+
+  .chat-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 4rem 1rem 10rem;
+    min-height: 0;
+  }
+
+  .chat-inner {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .timestamp-chip {
+    text-align: center;
+    font-size: 11px;
+    color: #4a2020;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 0 0 1.2rem;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+
+  .timestamp-chip.visible { opacity: 1; }
+
+  .chat-msg {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    margin-bottom: 48px;
+    display: flex;
+  }
+
+  .chat-msg.visible { opacity: 1; transform: translateY(0); }
+  .chat-msg.her { justify-content: flex-start; }
+  .chat-msg.me  { justify-content: flex-end; }
+
+  .bubble {
+    padding: 20px 20px;
+    border-radius: 18px;
+    font-size: clamp(15px, 4.5vw, 17px);
+    line-height: 1.9;
+    max-width: 78%;
+    font-weight: 400;
+    word-break: break-word;
+  }
+
+  .her .bubble {
+    background: #1f0000;
+    color: #e8c0c0;
+    border-bottom-left-radius: 4px;
+  }
+
+  .me .bubble {
+    background: #810000;
+    color: #ffe8e8;
+    border-bottom-right-radius: 4px;
+  }
+
+  .haa .bubble {
+    background: #2a0000;
+    color: #ff9090;
+    border: 1px solid #810000;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(14px, 4vw, 16px);
+    border-bottom-left-radius: 4px;
+  }
+
+  .scroll-hint {
+    position: fixed;
+    bottom: 1.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: #4a1010;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    animation: pulse 2s infinite;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 10;
+  }
+
+  .intro-text {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    margin-bottom: 28px;
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    color: #c07070;
+    font-size: clamp(1.1rem, 4vw, 1.4rem);
+    font-style: italic;
+    line-height: 1.8;
+  }
+
+  .intro-text.visible { opacity: 1; transform: translateY(0); }
+
+  @keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:0.9} }
+
+  #after-haa {
+    display: none;
+    text-align: center;
+    padding: 2rem 0 1rem;
+  }
+
+  .after-date {
+    font-size: 11px;
+    color: #5a2020;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .after-line {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1rem, 4vw, 1.2rem);
+    font-style: italic;
+    color: #c07070;
+  }
+
+  #to-letter-wrap {
+    display: none;
+    text-align: center;
+    padding: 1.5rem 0 3rem;
+  }
+
+  .open-btn {
+    background: transparent;
+    border: 1px solid #810000;
+    color: #e8c0c0;
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-style: italic;
+    padding: 13px 36px;
+    border-radius: 50px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+
+  .open-btn:hover, .open-btn:active { background: #1a0000; border-color: #e8c0c0; }
+
+  /* ── PAGE 3: LETTER ── */
+  #letter-page {
+    display: none;
+    flex-direction: column;
+    position: fixed;
+    inset: 0;
+    background: #0a0000;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #letter-page.active { display: flex; }
+
+  .letter-wrapper {
+    max-width: 480px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+  }
+
+  .letter-top { text-align: center; margin-bottom: 2rem; }
+
+  .letter-from {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #5a2020;
+    margin-bottom: 0.5rem;
+  }
+
+  .letter-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 6vw, 2.2rem);
+    font-weight: 700;
+    color: #810000;
+  }
+
+  .letter-divider {
+    width: 36px;
+    height: 1px;
+    background: #3a1010;
+    margin: 1rem auto;
+  }
+
+  .letter-body {
+    background: #0f0000;
+    font-family: 'Playfair Display', serif;
+    border: 1px solid #2a0000;
+    border-radius: 16px;
+    padding: clamp(1.2rem, 4vw, 2rem);
+    min-height: 200px;
+    font-size: clamp(14px, 3.8vw, 15px);
+    line-height: 1.9;
+    color: #d4a0a0;
+    font-weight: 300;
+  }
+
+  .letter-placeholder {
+    
+    font-family: 'Playfair Display', serif;
+    color: #2a1010;
+    font-style: italic;
+    font-size: 13px;
+  }
+
+  .letter-footer {
+    text-align: right;
+    margin-top: 1.5rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: #7a3030;
+  }
+
+  .letter-footer strong { color: #810000; font-weight: 500; }
+
+  /* ── CONFETTI ── */
+  .confetti-piece {
+    position: fixed;
+    pointer-events: none;
+    z-index: 999;
+    border-radius: 2px;
+    animation: fall linear forwards;
+  }
+
+  @keyframes fall {
+    0%   { transform: translateY(-20px) rotate(0deg);   opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- CHAT PAGE -->
+  <div id="chat-page">
+    <div class="chat-header">
+      <div class="chat-header-name">guava &amp; manngo</div>
+      <div class="chat-header-sub">Happy 2nd Monthsaryy baeee</div>
+    </div>
+
+    <div class="intro-section">
+      <div class="intro-text">Best moment of this year </div>
+      <div class="intro-text">On the same date at the same exact time<br>2 months ago..</div>
+    </div>
+
+    <div class="chat-scroll-area" id="chat-area">
+      <div class="chat-inner">
+        <div class="timestamp-chip" id="ts-chip">feb 7 <span class="lav-dot"></span> the night everything changed</div>
+
+        <div class="chat-msg her"><div class="bubble">so are we together now?</div></div>
+        <div class="chat-msg me" ><div class="bubble">what if I say yess what you do?</div></div>
+        <div class="chat-msg her"><div class="bubble">idk about you but my ans is YES</div></div>
+        <div class="chat-msg me" ><div class="bubble">Yess you do know and my ans is yesss</div></div>
+        <div class="chat-msg her"><div class="bubble">Really?</div></div>
+        <div class="chat-msg me" ><div class="bubble">Haaa kya karlegi?</div></div>
+        <div class="chat-msg her"><div class="bubble">Ha bol dungi</div></div>
+        <div class="chat-msg me" ><div class="bubble">To bol de</div></div>
+        <div class="chat-msg her haa"><div class="bubble">HAAAAAAAAAAAAAAAAA</div></div>
+
+        <div id="after-haa">
+          <div class="after-date">Feb 7, 2026 &nbsp;·&nbsp; 8:37 pm</div>
+          <div class="after-line">and that was how it all started. <span class="lav-dot"></span></div>
+        </div>
+
+        <div id="to-letter-wrap">
+          <button class="open-btn" onclick="goToLetter()">read the letter ♡</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-hint" id="scroll-hint">scroll to reveal ↓</div>
+  </div>
+
+  <!-- LETTER PAGE -->
+  <div id="letter-page">
+    <div class="letter-wrapper">
+      <div class="letter-top">
+        <div class="letter-from">from manngo <span class="lav-dot"></span> for guava</div>
+        <div class="letter-title">letter.</div>
+        <div class="letter-divider"></div>
+      </div>
+      <div class="letter-body">
+        <!-- WRITE YOUR LETTER HERE. Replace the p tag below with your own <p> tags. -->
+        <p class="letter-placeholder"><h2>My chikki Khushiii,</h2> <br> I hope you get this letter. Firstly HAPPY 2<sup>nd</sup> MONTHSARYYY BAEEE! It's been <b>59 Days, 1400 Hours</b> approximately since we found out we liked eachothers lol. i dont have much to say or anything to give you but heres the small gift i guess? i hope you like it, also tell me how much you like it ;> and im really sorry if i made any mistakes or hurt you in these 2 months and ill try not to do any mistakes  in the future i want to treat you better. its 2:23AM rn💀. but it doesn't matter, all i care is about you my girlll, i want youuuu, i misss youu<br><br> LOVEEE YAAAA SO MUCHHH, guava :>.
+        </p>
+      </div>
+      <div class="letter-footer">— <strong>manngo</strong> &nbsp;♡♡♡</div>
+    </div>
+  </div>
+
+<script>
+  let revealedCount = 0;
+
+  function goToLetter() {
+    document.getElementById('chat-page').classList.add('hidden');
+    document.getElementById('letter-page').classList.add('active');
+  }
+
+  function setupScrollReveal() {
+    const area = document.getElementById('chat-area');
+    const introTexts = Array.from(area.querySelectorAll('.intro-text'));
+    const msgs = Array.from(area.querySelectorAll('.chat-msg'));
+    const allElements = [...introTexts, ...msgs];
+
+    document.getElementById('ts-chip').classList.add('visible');
+
+    let nextIndex = 0;
+    let isWaiting = false;
+
+    function reveal() {
+      if (nextIndex >= allElements.length || isWaiting) return;
+      
+      const el = allElements[nextIndex];
+      const rect = el.getBoundingClientRect();
+      const areaRect = area.getBoundingClientRect();
+      
+      // Check if element is in viewport
+      if (rect.top < areaRect.bottom && rect.bottom > areaRect.top) {
+        el.classList.add('visible');
+        nextIndex++;
+        isWaiting = true;
+        
+        // Delay before next element can be revealed
+        setTimeout(function() {
+          isWaiting = false;
+          reveal(); // Check next element
+        }, 800);
+        
+        if (nextIndex === allElements.length) {
+          setTimeout(function() {
+            document.getElementById('after-haa').style.display = 'block';
+            launchConfetti();
+            setTimeout(function() {
+              document.getElementById('to-letter-wrap').style.display = 'block';
+              const sh = document.getElementById('scroll-hint');
+              if (sh) sh.style.display = 'none';
+            }, 1800);
+          }, 500);
+        }
+      }
+    }
+
+    area.addEventListener('scroll', reveal, { passive: true });
+  }
+
+  function launchConfetti() {
+    const colors = ['#810000','#a03030','#c4a8d4','#e8c0c0','#d4a8d8','#ff9090','#b06080'];
+    for (let i = 0; i < 90; i++) {
+      setTimeout(function() {
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left = (Math.random()*100)+'vw';
+        el.style.background = colors[Math.floor(Math.random()*colors.length)];
+        el.style.width = (6+Math.random()*6)+'px';
+        el.style.height = (6+Math.random()*6)+'px';
+        el.style.animationDuration = (1.5+Math.random()*2.5)+'s';
+        document.body.appendChild(el);
+        setTimeout(function(){ el.remove(); }, 4500);
+      }, i * 25);
+    }
+  }
+
+  // kick off on load
+  setupScrollReveal();
+</script>
+</body>
+</html>
