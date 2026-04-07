@@ -200,7 +200,7 @@
     <h1 class="lock-title">something is waiting for you.</h1>
     <p class="lock-sub">
       open it when the clock hits<br>
-      <span style="color:#810000; font-size:16px; font-weight:500;">8:37 PM</span>
+      <span style="color:#810000; font-size:16px; font-weight:500;">6:30 PM</span>
     </p>
 
     <button class="open-btn" id="open-btn" onclick="tryOpen()">open ♡</button>
@@ -212,9 +212,9 @@
   <div class="modal-overlay" id="modal">
     <div class="modal-box">
       <div class="modal-title" id="modal-title">not now cutieee 🔒</div>
-      <p class="modal-body" id="modal-body">the clock hasn't hit 8:37 yet.<br>be patient, guava.</p>
+      <p class="modal-body" id="modal-body">the clock hasn't hit 6:30 yet.<br>be patient, guava.</p>
       <p class="modal-time">
-        unlocks at <span style="color:#810000;">8:37 PM</span><br>
+        unlocks at <span style="color:#810000;">6:30 PM</span><br>
         <span id="modal-cd" style="color:#5a2020;">—</span> to go
       </p>
       <button class="modal-close" onclick="closeModal()">okay fine 🙄</button>
@@ -281,8 +281,8 @@
       modalCount === 1 ? 'not now cutieee 🔒' : 'I saiddd not nowww 😭';
     document.getElementById('modal-body').innerHTML =
       modalCount === 1
-        ? "the clock hasn't hit 8:37 yet.<br>be patient, guava."
-        : "let the clock hit <span style='color:#810000'>8:37 PM</span> first!<br>stop trying to cheat.";
+        ? "the clock hasn't hit 6:30 yet.<br>be patient, guava."
+        : "let the clock hit <span style='color:#810000'>6:30 PM</span> first!<br>stop trying to cheat.";
     document.getElementById('modal').classList.add('show');
   }
 
