@@ -228,12 +228,12 @@
 
   function isUnlocked() {
     const n = new Date();
-    return n.getHours() > 20 || (n.getHours() === 15 && n.getMinutes() >= 41);
+    return n.getHours() > 20 || (n.getHours() === 18 && n.getMinutes() >= 30);
   }
 
   function getTimeLeft() {
     const now = new Date();
-    const unlock = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 15, 41, 0);
+    const unlock = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 18, 30, 0);
     return Math.max(0, unlock - now);
   }
 
